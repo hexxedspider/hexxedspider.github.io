@@ -1,10 +1,238 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>testing</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>hexxedspider's corner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #e5e5e5;
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      line-height: 1.6;
+      scroll-behavior: smooth; /* smooth scroll for nav */
+    }
+
+    /* --- NAV BAR --- */
+    nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: rgba(30, 30, 30, 0.9);
+      backdrop-filter: blur(6px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 10;
+    }
+
+    nav a {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: #ccc;
+      text-decoration: none;
+      position: relative;
+      padding: 0.3rem 0;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: #aaa;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 6px #888;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* --- FOCUS FIX (kills blue line) --- */
+    nav a:focus,
+    nav a:focus-visible,
+    nav a:active,
+    section:focus,
+    section:focus-within {
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    section::-moz-focus-inner { border: 0 !important; }
+    :focus-visible { outline: none !important; }
+
+    /* --- HEADER --- */
+    header {
+      text-align: center;
+      padding: 5rem 1rem 2rem;
+    }
+
+    header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 3rem;
+      color: #cfcfcf;
+      text-shadow: 0 0 5px #aaa, 0 0 15px #555;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #a6a6a6;
+      margin-top: 1rem;
+    }
+
+    /* --- SECTIONS --- */
+    section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: rgba(40, 40, 40, 0.85);
+      border-radius: 1.5rem;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8),
+                  0 0 40px rgba(100, 100, 100, 0.2);
+      transition: box-shadow 0.4s ease;
+    }
+
+    /* Candlelight flicker glow */
+    section:hover {
+      animation: candleFlicker 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes candleFlicker {
+      0%   { box-shadow: 0 0 18px rgba(200, 200, 200, 0.25),
+                      0 0 35px rgba(150, 150, 150, 0.15); }
+      25%  { box-shadow: 0 0 22px rgba(220, 220, 220, 0.35),
+                      0 0 40px rgba(200, 200, 200, 0.2); }
+      50%  { box-shadow: 0 0 20px rgba(230, 230, 230, 0.3),
+                      0 0 45px rgba(180, 180, 180, 0.2); }
+      75%  { box-shadow: 0 0 23px rgba(210, 210, 210, 0.35),
+                      0 0 42px rgba(190, 190, 190, 0.25); }
+      100% { box-shadow: 0 0 18px rgba(200, 200, 200, 0.25),
+                      0 0 38px rgba(160, 160, 160, 0.15); }
+    }
+
+    section h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #dcdcdc;
+    }
+
+    section p {
+      font-size: 1rem;
+      color: #d6d6d6;
+      text-align: center;
+    }
+
+    /* --- VOIDSTAR --- */
+    .voidstar {
+      display: inline-block;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: #a6a6a6;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+      margin: 1rem auto;
+    }
+
+    .voidstar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(200, 200, 200, 0.3);
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        gap: 1rem;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 2.2rem;
+      }
+      section {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+      }
+      section h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>hello world or some like that</h1>
-  <p>adding another line cause im coo</p>
+  <!-- NAV -->
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <header>
+    <h1>hexxedspider's corner</h1>
+    <p class="voidstar">placeholder, boom shakalaka or something</p>
+  </header>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>
+      I'm a wanderer in the web, building things, breaking things, 
+      and leaving behind digital echoes. Welcome to my little gothic-modern corner.
+    </p>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <p>
+      ✦ Project 1: Dark Portfolio Theme <br>
+      ✦ Project 2: Discord Bot Experiments <br>
+      ✦ Project 3: AI Art Generator
+    </p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>
+      Want to reach out? Find me on GitHub or drop a message in the void.  
+      <br>
+      <span class="voidstar">github.com/hexxedspider</span>
+    </p>
+  </section>
+
+  <footer>
+    © 2025 hexxedspider — All rights reserved.
+  </footer>
 </body>
 </html>
