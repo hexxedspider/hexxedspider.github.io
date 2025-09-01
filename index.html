@@ -195,11 +195,15 @@ section h1 {
     max-height: 65vh;
     overflow-y: auto;
     padding: 2rem;
+    opacity: 0;
 
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1rem, 2vw, 1.4rem);
     line-height: 1.5;
     text-align: center;
+
+    transition: opacity 0.6s ease, transform 0.3s ease; /* fade + optional slight movement */
+    transform: translateY(10px); /* optional: slide up slightly */
   }
 
   .names-list p {
@@ -212,12 +216,14 @@ section h1 {
     /* make them stand out more */
     color: #eaeaea;
     background: rgba(255, 255, 255, 0.05);
+    opacity: 1;
+    transform: translateY(0); /* slide into place */
   }
 
   .names-list p:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05);
+    transform: scale(1.1);
     text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
   }
 
@@ -382,20 +388,49 @@ section h1 {
   transform: scale(1.1);
   background: #eee;
 }
+
+#splashOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* above everything */
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+#splashVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 </style>
 </head>
 <body>
+
+<div id="splashOverlay">
+  <video id="splashVideo" autoplay muted>
+    <source src="assets/splashscreen.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
 
 <nav>
   <a href="#" data-target="about">About</a>
   <a href="#" data-target="projects">Projects</a>
   <a href="#" data-target="contact">Contact</a>
+  <a href="#" data-target="spider">Spider</a>
 </nav>
 
 <main>
   <section id="about" class="active">
-    <h1>h exx ed spi der's co rn er</h1>
-    <p class="voidstar">im well aware its hexed and not hexxed.</p>
+    <h1>hexxedspider's corner</h1>
+    <p class="voidstar">im well aware its hexed and not hexxed, but hexed doesnt look right.</p>
     <p></p>
     <p>hey, before anything else, im gonna go over the main names i have, which are hex(xed), spider, and v4mp(ire).</p>
     <p></p>
@@ -425,9 +460,15 @@ section h1 {
     <p>Telegram: @hexxedspider</p>
     <p></p>
     <p>(more will be added once i think of accounts i can be reached on)</p>
-  <canvas class="dissolve-overlay"></canvas>
-  <canvas id="fluidCanvas"></canvas>
+  </section>
+    <section id="spider">
+    <h1>Spider</h1>
+    <p>this is more personal "about" page, but you could also call it random.</p>
+  </section>
 </main>
+
+<canvas id="fluidCanvas"></canvas>
+<canvas class="dissolve-overlay"></canvas>
 
 <div class="names-overlay" id="namesOverlay">
   <h1 class="names-title" id="namesTitle">List of Names</h1>
@@ -694,7 +735,7 @@ function activateSpiderSecret() {
     <div class="spider-overlay">
       <div class="spider-container">
         <h1 class="spider-title">hexxed spider</h1>
-        <p class="spider-sub">Welcome to the web...</p>
+        <p class="spider-sub">U Never Learn, Or Can Keep (it), Even (though it's) daily?</p>
         <div class="spider-web"></div>
         <button class="secret-close">Leave</button>
       </div>
@@ -791,7 +832,7 @@ function activateFluidSecret() {
     <h1 style="font-family:'Cinzel Decorative',serif; font-size:2rem; margin-bottom:2rem;">
     ~cr4ck/modified/spider/hexxed/true;
     </h1>
-    <button class="secret-btn" onclick="window.open('https://mega.nz/folder/i05AgISI#3bSv-rpdtjnZ9theXZHq4Q')">
+    <button class="secret-btn" onclick="window.open('https://archive.org/download/fl-studio-producer-edition-v-21.0.3-build-3517-re-pack/FL%20Studio%20Producer%20Edition%20v21.0.3%20Build%203517%20Re-Pack.zip')">
       FL Prod. Edition (v2021)
     </button>
   `;
@@ -804,6 +845,26 @@ function activateFluidSecret() {
     }
   });
 }
+
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splashOverlay");
+  const video = document.getElementById("splashVideo");
+
+  function removeSplash() {
+    splash.style.opacity = 0;
+    setTimeout(() => splash.remove(), 1000); // wait for fade
+  }
+
+  if (video) {
+    video.addEventListener("ended", removeSplash);
+    // fallback: if you want a preset 6 seconds
+    setTimeout(removeSplash, 6000);
+  } else {
+    // if video fails, remove after 6s
+    setTimeout(removeSplash, 6000);
+  }
+});
+
 </script>
 </body>
 </html>
