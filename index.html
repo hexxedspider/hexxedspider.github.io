@@ -408,68 +408,6 @@ section h1 {
   height: 100%;
   object-fit: cover;
 }
-
-.pfp-animation {
-  position: relative;
-  width: 300px; /* width of combined final image */
-  height: 150px; /* height of the images */
-  margin: 2rem auto;
-}
-
-.pfp {
-  position: absolute;
-  top: 0;
-  width: 150px; /* half width each */
-  height: 150px;
-  object-fit: cover;
-  opacity: 0;
-  border-radius: 50%;
-  transform-origin: center;
-  animation: fade-spin 2s ease forwards, spin-slow 4s linear infinite;
-}
-
-.pfp.left {
-  left: 0;
-  border-radius: 50% 0 0 50%; /* rounded on left */
-}
-
-.pfp.right {
-  right: 0;
-  border-radius: 0 50% 50% 0; /* rounded on right */
-}
-
-/* fade in + initial rotation */
-@keyframes fade-spin {
-  0% { opacity: 0; transform: rotate(0deg); }
-  100% { opacity: 1; transform: rotate(720deg); } /* 2 spins */
-}
-
-/* slow continuous spin after fade-in */
-@keyframes spin-slow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(180deg); } /* half spin over 4s */
-}
-
-.pfp-animation.merge .pfp.left {
-  animation: move-left 2s ease forwards 0s, spin-slow 4s linear infinite 2s;
-}
-
-.pfp-animation.merge .pfp.right {
-  animation: move-right 2s ease forwards 0s, spin-slow 4s linear infinite 2s;
-}
-
-@keyframes move-left {
-  0% { left: 0; transform: rotate(180deg); }
-  50% { left: -50px; transform: rotate(90deg); } /* move away */
-  100% { left: 75px; transform: rotate(0deg); } /* come together */
-}
-
-@keyframes move-right {
-  0% { right: 0; transform: rotate(180deg); }
-  50% { right: -50px; transform: rotate(90deg); } /* move away */
-  100% { right: 75px; transform: rotate(0deg); } /* come together */
-}
-
 </style>
 </head>
 <body>
@@ -525,11 +463,6 @@ section h1 {
   <section id="spider">
     <h1>Spider</h1>
     <p>this is more personal "about" page, but you could also call it random.</p>
-    
-    <div class="pfp-animation">
-      <img src="assets/pfp-left.png" class="pfp left" />
-      <img src="assets/pfp-right.png" class="pfp right" />
-    </div>
   </section>
 </main>
 
@@ -930,12 +863,6 @@ window.addEventListener("load", () => {
     setTimeout(removeSplash, 6000);
   }
 });
-
-const pfpContainer = document.querySelector('.pfp-animation');
-
-setTimeout(() => {
-  pfpContainer.classList.add('merge');
-}, 3000); // wait 3 seconds for initial fade-spin
 
 </script>
 </body>
