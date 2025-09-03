@@ -408,6 +408,23 @@ section h1 {
   height: 100%;
   object-fit: cover;
 }
+
+.spider-pfp {
+  display: block;
+  margin: 0 auto 1.2rem auto;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(0,0,0,0.4);
+  border: 3px solid #333;
+  background: #222;
+}
+
+.spider-title-center {
+  text-align: center;
+  margin-top: 0.5rem;
+}
 </style>
 </head>
 <body>
@@ -441,7 +458,7 @@ section h1 {
   </section>
   <section id="projects">
     <h1>Projects</h1>
-    <p>ive worked on Discord bots, <a href="https://www.github.com/hexxedspider/kira-and-enigami"> such as Kirabiter and the related bots</a>, and other things discord related.</p>
+    <p class="voidstar">ive worked on Discord bots, <a href="https://www.github.com/hexxedspider/kira-and-enigami"> such as Kirabiter and the related bots</a>, and other things discord related.</p>
     <p></p>
     <p>ive also worked on Discord selfbots, which are more risky and have gotten my account locked (reset password and its been fine since), but still fun. currently, <strong>my personal</strong> selfbots are <strong>not</strong> up for view or download, and are me and me only.</p>
     <p></p>
@@ -461,13 +478,11 @@ section h1 {
     <p>(more will be added once i think of accounts i can be reached on)</p>
   </section>
   <section id="spider">
-    <h1>Spider</h1>
-    <p>this is more personal "about" page, but you could also call it random.</p>
-    
     <div class="pfp-animation">
-      <img src="assets/pfp-left.png" class="pfp left" />
-      <img src="assets/pfp-right.png" class="pfp right" />
+      <img class="spider-pfp" src="assets/pfp.png" alt="pfp" />
     </div>
+    <h1 class="spider-title-center">Spider</h1>
+    <p>this is more personal "about" page, but you could also call it random.</p>
   </section>
 </main>
 
@@ -867,6 +882,20 @@ window.addEventListener("load", () => {
     // if video fails, remove after 6s
     setTimeout(removeSplash, 6000);
   }
+    // --- Splash skip logic ---
+    let canSkipSplash = false;
+    setTimeout(() => { canSkipSplash = true; }, 90);
+    function trySkipSplash() {
+      if (canSkipSplash && splash && splash.parentNode) {
+        removeSplash();
+        window.removeEventListener('keydown', trySkipSplash);
+        window.removeEventListener('mousedown', trySkipSplash);
+        window.removeEventListener('touchstart', trySkipSplash);
+      }
+    }
+    window.addEventListener('keydown', trySkipSplash);
+    window.addEventListener('mousedown', trySkipSplash);
+    window.addEventListener('touchstart', trySkipSplash);
 });
 
 </script>
