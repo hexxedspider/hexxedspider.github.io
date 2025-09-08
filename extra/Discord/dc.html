@@ -174,12 +174,17 @@ body:not(.splashing) > #mainContent {
   100% { filter: blur(8px) brightness(1.2); }
 }
 .server-bar-info {
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
   display: flex;
   flex-direction: column;
-  margin-left: 1.1rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
+  position: absolute;
+  left: 0; right: 0; bottom: 0; top: auto;
+  padding-bottom: 1.2rem;
+  background: none;
+  transition: opacity 0.3s, transform 0.35s cubic-bezier(.4,0,.2,1);
+  transform: translateY(40px);
   color: #fff;
   z-index: 2;
   text-align: left;
@@ -187,24 +192,19 @@ body:not(.splashing) > #mainContent {
 .server-bar-btn:hover .server-bar-info {
   opacity: 1;
   pointer-events: all;
-  position: absolute;
-  left: 0; right: 0; top: 0; bottom: 0;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(120deg, #232323cc 60%, #23232399 100%);
+  background: linear-gradient(0deg, #232323cc 80%, #23232399 100%);
   border-radius: 1.2rem;
+  transform: translateY(0);
+  padding-bottom: 0;
 }
 .server-bar-title {
-  font-size: 1.2rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
   font-weight: bold;
   margin-bottom: 0.4rem;
   text-shadow: 0 2px 8px #000a;
 }
 .server-bar-desc {
-  font-size: 0.98rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
   color: #e0e0e0;
   text-shadow: 0 1px 4px #0008;
 }
@@ -222,10 +222,10 @@ body:not(.splashing) > #mainContent {
 
   <div class="dc-header">
     <img src="/assets/pfp.png" alt="Discord Logo" class="dc-logo" />
-    <h1>Discord Server Hub</h1>
-    <p class="dc-desc">Welcome! Choose a server to join from the bar below.<br>
-    Each server has its own vibe, community, and focus.<br>
-    Hover a server for more info and a preview.</p>
+    <h1>Discord Hangout's</h1>
+    <p class="dc-desc">hey!<br>
+    each server is unique, which you'll find out upon hovering over one.<br>
+    more will be added over time- probably.</p>
   </div>
 </style>
 <style>
@@ -268,10 +268,10 @@ body:not(.splashing) > #mainContent {
 <div class="server-bar">
   <button class="server-bar-btn" onclick="window.open('https://discord.gg/example1','_blank')">
     <span class="server-bar-glow"></span>
-    <img src="/assets/pfp.png" alt="Server 1" class="server-bar-img" />
+    <img src="/assets/RGC.png" alt="Server 1" class="server-bar-img" />
     <span class="server-bar-info">
-      <span class="server-bar-title">Hexxed's Hangout</span>
-      <span class="server-bar-desc">Main community, chill & dev talk</span>
+      <span class="server-bar-title">RGC - Rezzu's Gamblers Collective</span>
+      <span class="server-bar-desc">It's a server for, what you could guess, gambling. Basic commands such as blackjack, coinflip, race, and more are already built in.</span>
     </span>
   </button>
   <button class="server-bar-btn" onclick="window.open('https://discord.gg/example2','_blank')">
