@@ -219,22 +219,49 @@ body:not(.splashing) > #mainContent {
 </div>
 
 <div id="mainContent">
-  <h1>Welcome to the Test Page</h1>
-  <p>This is a simple HTML file used for testing purposes.</p>
-  <p>will eventually immitate discords loading screen, then have an array of servers available to join.</p>
 
-<div class="server-preview-list">
-  <button class="server-btn" onclick="window.open('https://discord.gg/example1','_blank')">
-    <span class="server-glow"></span>
-    <img src="/assets/pfp.png" alt="Server 1" class="server-img" />
-    <span class="server-label">Hexxed's Hangout</span>
-  </button>
-  <button class="server-btn" onclick="window.open('https://discord.gg/example2','_blank')">
-    <span class="server-glow"></span>
-    <img src="/assets/dc-servers/RGC.png" alt="Server 2" class="server-img" />
-    <span class="server-label">Rezzu's Gamblers Collective</span>
-  </button>
-</div>
+  <div class="dc-header">
+    <img src="/assets/pfp.png" alt="Discord Logo" class="dc-logo" />
+    <h1>Discord Server Hub</h1>
+    <p class="dc-desc">Welcome! Choose a server to join from the bar below.<br>
+    Each server has its own vibe, community, and focus.<br>
+    Hover a server for more info and a preview.</p>
+  </div>
+</style>
+<style>
+.dc-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3.5rem;
+  margin-bottom: 2.5rem;
+}
+.dc-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 24px #5865f2, 0 0 48px #232323;
+  margin-bottom: 1.2rem;
+}
+.dc-header h1 {
+  color: #fff;
+  font-size: 2.3rem;
+  font-family: 'Montserrat', Arial, sans-serif;
+  margin-bottom: 0.7rem;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px #5865f2cc, 0 1px 8px #000a;
+}
+.dc-desc {
+  color: #e0e0e0;
+  font-size: 1.15rem;
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.7;
+  text-shadow: 0 1px 6px #232323, 0 1px 2px #0008;
+}
+</style>
 
 </div>
 
