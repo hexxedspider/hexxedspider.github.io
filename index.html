@@ -524,6 +524,10 @@ section h1 {
 </head>
 <body>
 
+<!-- Mobile keyboard button for secrets -->
+<img id="showKeyboardBtn" src="/assets/mobileKeyboard.png" alt="Show Keyboard" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;z-index:12000;opacity:0.7;cursor:pointer;transition:opacity 0.2s;" />
+<input id="secretInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" style="position:fixed;bottom:5.5rem;right:1.5rem;width:1px;height:1px;opacity:0;z-index:12001;pointer-events:none;" />
+
 <div id="splashOverlay">
   <video id="splashVideo" autoplay muted>
     <source src="assets/splashscreen.mp4" type="video/mp4">
@@ -640,6 +644,35 @@ section h1 {
 <footer>© 2025 hexxedspider — All rights reserved.</footer>
 
 <script>
+// --- Show keyboard for secrets on touch devices ---
+(function() {
+  const isTouch = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
+  const showBtn = document.getElementById('showKeyboardBtn');
+  const secretInput = document.getElementById('secretInput');
+  if (isTouch) {
+    showBtn.style.display = 'block';
+    showBtn.addEventListener('click', () => {
+      secretInput.style.opacity = 1;
+      secretInput.style.pointerEvents = 'auto';
+      secretInput.focus();
+      showBtn.style.opacity = 1;
+    });
+    // Hide input when not focused
+    secretInput.addEventListener('blur', () => {
+      secretInput.style.opacity = 0;
+      secretInput.style.pointerEvents = 'none';
+    });
+    // Optional: fade button on hover/tap
+    showBtn.addEventListener('touchstart', () => showBtn.style.opacity = 1);
+    showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
+  }
+  // Forward key events from input to document for secret detection
+  secretInput.addEventListener('keydown', e => {
+    // Re-dispatch as if from document
+    const evt = new KeyboardEvent('keydown', e);
+    document.dispatchEvent(evt);
+  });
+})();
 const links = document.querySelectorAll('nav a');
 const sections = document.querySelectorAll('section');
 const canvas = document.querySelector('.dissolve-overlay');
