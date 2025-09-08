@@ -174,17 +174,12 @@ body:not(.splashing) > #mainContent {
   100% { filter: blur(8px) brightness(1.2); }
 }
 .server-bar-info {
-  width: 100%;
-  align-items: center;
-  justify-content: flex-end;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  left: 0; right: 0; bottom: 0; top: auto;
-  padding-bottom: 1.2rem;
-  background: none;
-  transition: opacity 0.3s, transform 0.35s cubic-bezier(.4,0,.2,1);
-  transform: translateY(40px);
+  margin-left: 1.1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
   color: #fff;
   z-index: 2;
   text-align: left;
@@ -192,19 +187,24 @@ body:not(.splashing) > #mainContent {
 .server-bar-btn:hover .server-bar-info {
   opacity: 1;
   pointer-events: all;
-  background: linear-gradient(0deg, #232323cc 80%, #23232399 100%);
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(120deg, #232323cc 60%, #23232399 100%);
   border-radius: 1.2rem;
-  transform: translateY(0);
-  padding-bottom: 0;
 }
 .server-bar-title {
-  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+  font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.4rem;
   text-shadow: 0 2px 8px #000a;
 }
 .server-bar-desc {
-  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+  font-size: 0.98rem;
   color: #e0e0e0;
   text-shadow: 0 1px 4px #0008;
 }
@@ -266,20 +266,20 @@ body:not(.splashing) > #mainContent {
 </div>
 
 <div class="server-bar">
-  <button class="server-bar-btn" onclick="window.open('https://discord.gg/example1','_blank')">
+  <button class="server-bar-btn" onclick="window.open('https://discord.gg/VXd4xD7DEw','_blank')">
     <span class="server-bar-glow"></span>
     <img src="/assets/RGC.png" alt="Server 1" class="server-bar-img" />
     <span class="server-bar-info">
       <span class="server-bar-title">RGC - Rezzu's Gamblers Collective</span>
-      <span class="server-bar-desc">It's a server for, what you could guess, gambling. Basic commands such as blackjack, coinflip, race, and more are already built in.</span>
+      <span class="server-bar-desc">It's a server obviously for gambling. Basic games such as blackjack, coinflip, race, and more are already built in.</span>
     </span>
   </button>
-  <button class="server-bar-btn" onclick="window.open('https://discord.gg/example2','_blank')">
+  <button class="server-bar-btn" onclick="window.open('https://discord.gg/dEnF55hgaG','_blank')">
     <span class="server-bar-glow"></span>
-    <img src="/assets/pfp.png" alt="Server 2" class="server-bar-img" />
+    <img src="/assets/vampbyte.jng" alt="Server 2" class="server-bar-img" />
     <span class="server-bar-info">
-      <span class="server-bar-title">Spider's Web</span>
-      <span class="server-bar-desc">Alt server, memes & random</span>
+      <span class="server-bar-title">vampbyte</span>
+      <span class="server-bar-desc">Alt server, not meant for talking, but instead for watching.</span>
     </span>
   </button>
 </div>
