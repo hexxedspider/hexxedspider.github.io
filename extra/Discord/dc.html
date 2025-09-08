@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Test Page</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 0; }
+  body { font-family: Arial, sans-serif; margin: 0; background: #2c2d2c; }
   h1 { color: #bbbbbb; }
   p { font-size: 16px; line-height: 1.5; }
   #splashOverlay {
@@ -37,6 +37,74 @@ body:not(.splashing) > #mainContent {
   pointer-events: all;
   transition: opacity 0.5s;
 }
+.server-preview-list {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+.server-btn {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 24px #0008;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+  margin-bottom: 1.2rem;
+}
+.server-btn:hover {
+  transform: scale(1.08);
+}
+.server-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 18px #2c2d2c, 0 0 32px #fff2;
+  z-index: 1;
+}
+.server-label {
+  display: block;
+  margin-top: 0.7rem;
+  color: #fff;
+  font-size: 1.05rem;
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-align: center;
+  text-shadow: 0 2px 8px #000a;
+  letter-spacing: 0.5px;
+}
+.server-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 120px; height: 120px;
+  transform: translate(-50%,-50%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    #5865f2 0deg 90deg,
+    #57f287 90deg 180deg,
+    #f47fff 180deg 270deg,
+    #fee75c 270deg 360deg
+  );
+  filter: blur(6px) brightness(1.2);
+  opacity: 0.7;
+  animation: spin-glow 2.5s linear infinite;
+}
+@keyframes spin-glow {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
 </style>
 </head>
 <body>
@@ -51,6 +119,20 @@ body:not(.splashing) > #mainContent {
   <h1>Welcome to the Test Page</h1>
   <p>This is a simple HTML file used for testing purposes.</p>
   <p>will eventually immitate discords loading screen, then have an array of servers available to join.</p>
+
+<div class="server-preview-list">
+  <button class="server-btn" onclick="window.open('https://discord.gg/example1','_blank')">
+    <span class="server-glow"></span>
+    <img src="/assets/pfp.png" alt="Server 1" class="server-img" />
+    <span class="server-label">Hexxed's Hangout</span>
+  </button>
+  <button class="server-btn" onclick="window.open('https://discord.gg/example2','_blank')">
+    <span class="server-glow"></span>
+    <img src="/assets/dc-servers/RCG.png" alt="Server 2" class="server-img" />
+    <span class="server-label">Spider's Web</span>
+  </button>
+</div>
+
 </div>
 
 <script>
