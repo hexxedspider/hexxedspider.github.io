@@ -425,6 +425,101 @@ section h1 {
   text-align: center;
   margin-top: 0.5rem;
 }
+
+/* MISC MODAL OVERLAY */
+#miscModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(10,10,10,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(.4,0,.2,1);
+}
+#miscModal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.misc-modal-content {
+  background: linear-gradient(135deg,#232323 60%,#191919 100%);
+  border-radius: 2rem;
+  box-shadow: 0 0 40px #000, 0 0 80px #333;
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(60px);
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+#miscModal.active .misc-modal-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+.misc-modal-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: #fff;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #fff, 0 0 18px #888;
+}
+.misc-btn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  align-items: center;
+}
+.misc-btn {
+  padding: 1.1rem 2.5rem;
+  border: none;
+  border-radius: 1.5rem;
+  background: linear-gradient(90deg,#fff 0%,#e0e0e0 100%);
+  color: #181818;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 0 18px #fff2, 0 0 30px #8882;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s, color 0.3s;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+.misc-btn:hover {
+  background: linear-gradient(90deg,#e0e0e0 0%,#fff 100%);
+  color: #000;
+  transform: scale(1.07) translateY(-2px);
+  box-shadow: 0 0 30px #fff6, 0 0 60px #8883;
+}
+.misc-close-btn {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 2;
+}
+.misc-close-btn:hover {
+  color: #ff8888;
+}
+@media (max-width: 600px) {
+  .misc-modal-content { min-width: 0; padding: 1.2rem 0.5rem; }
+  .misc-modal-title { font-size: 1.3rem; }
+  .misc-btn { font-size: 0.95rem; padding: 0.8rem 1.2rem; }
+}
 </style>
 </head>
 <body>
@@ -528,6 +623,17 @@ section h1 {
     <p>blexxed</p>
     <p>blexxedNYXH</p>
     <p>selenian</p>
+  </div>
+</div>
+
+<!-- MISC MODAL OVERLAY -->
+<div id="miscModal" class="misc-modal-overlay">
+  <div class="misc-modal-content">
+    <button class="misc-close-btn" title="Close">&times;</button>
+    <h2 class="misc-modal-title">Miscellaneous</h2>
+    <div class="misc-btn-list">
+      <!-- Buttons will be injected by JS -->
+    </div>
   </div>
 </div>
 
@@ -868,6 +974,87 @@ function activateFluidSecret() {
     }
   });
 }
+
+// --- MISC MODAL LOGIC ---
+(() => {
+  // List of buttons: { text, url }
+  const miscOptions = [
+    { text: 'Discord', url: 'extra/Discord/dc.html' },
+    { text: 'YouTube', url: 'extra/YouTube/yt.html' },
+    { text: 'GitHub', url: 'https://github.com/hexxedspider' },
+    { text: 'Reddit', url: 'https://reddit.com/user/suicidespiders' },
+    // Add more as needed
+  ];
+
+  const modal = document.getElementById('miscModal');
+  const btnList = modal.querySelector('.misc-btn-list');
+  const closeBtn = modal.querySelector('.misc-close-btn');
+
+  // Populate buttons
+  btnList.innerHTML = '';
+  miscOptions.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'misc-btn';
+    btn.textContent = opt.text;
+    btn.onclick = () => {
+      window.open(opt.url, '_blank');
+      closeModal();
+    };
+    btnList.appendChild(btn);
+  });
+
+  function openModal() {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Focus first button for accessibility
+    setTimeout(() => {
+      const firstBtn = btnList.querySelector('.misc-btn');
+      if (firstBtn) firstBtn.focus();
+    }, 400);
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    // Clear buffer
+    miscBuffer = '';
+  }
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (modal.classList.contains('active')) {
+      if (e.key === 'Escape') closeModal();
+    }
+  });
+
+  // --- Detect typing "misc" anywhere ---
+  let miscBuffer = '';
+  document.addEventListener('keydown', e => {
+    if (modal.classList.contains('active')) return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+    if (e.key.length === 1) {
+      miscBuffer += e.key.toLowerCase();
+      if (miscBuffer.length > 8) miscBuffer = miscBuffer.slice(-8);
+      if (miscBuffer.endsWith('misc')) {
+        // Fade out current content, then show modal
+        fadeAndShowModal();
+        miscBuffer = '';
+      }
+    }
+  });
+
+  function fadeAndShowModal() {
+    // Fade out main content (sections)
+    const main = document.querySelector('main');
+    main.style.transition = 'opacity 0.5s cubic-bezier(.4,0,.2,1)';
+    main.style.opacity = '0';
+    setTimeout(() => {
+      openModal();
+      main.style.opacity = '1';
+    }, 500);
+  }
+})();
 
 window.addEventListener("load", () => {
   const splash = document.getElementById("splashOverlay");

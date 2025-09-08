@@ -1,0 +1,47 @@
+<html>
+<head>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: #2c2d2c;
+            overflow: hidden;
+        }
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            opacity: 1;
+            z-index: 1;
+            transition: opacity 2s;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" src="https://github.com/hexxedspider/hexxedspider.github.io/blob/main/assets/@HarryLeGiant15.mp4" controls controlsList="nodownload nofullscreen" oncontextmenu="return false;"></video>
+    <div class="overlay" id="overlay">
+        <h1>hi. not downloading this piece of junk.</h1>
+        <p>awe shucks, this is a pointless message.</p>
+    </div>
+    <script>
+        const v = document.getElementById('video');
+        const o = document.getElementById('overlay');
+        v.onended = () => {
+            v.style.opacity = '0';
+            setTimeout(() => o.style.opacity = '1', 2000);
+        };
+    </script>
+</body>
+</html>
