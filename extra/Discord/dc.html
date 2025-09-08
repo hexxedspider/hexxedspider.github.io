@@ -105,6 +105,109 @@ body:not(.splashing) > #mainContent {
   0% { transform: translate(-50%,-50%) rotate(0deg); }
   100% { transform: translate(-50%,-50%) rotate(360deg); }
 }
+.server-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  gap: 2.2rem;
+  padding: 1.2rem 0 1.7rem 0;
+  background: linear-gradient(0deg, #232323 80%, transparent 100%);
+  z-index: 100;
+}
+.server-bar-btn {
+  position: relative;
+  width: 180px;
+  height: 60px;
+  border: none;
+  background: #232323;
+  border-radius: 2.2rem;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 18px #000a;
+  transition: width 0.35s cubic-bezier(.4,0,.2,1), height 0.35s cubic-bezier(.4,0,.2,1), border-radius 0.35s, box-shadow 0.3s;
+  padding: 0 1.1rem;
+  min-width: 0;
+}
+.server-bar-btn:hover {
+  width: 180px;
+  height: 180px;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 32px #fff4, 0 0 0 6px #fff2;
+  justify-content: center;
+}
+.server-bar-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 10px #fff4;
+  z-index: 1;
+  transition: width 0.35s, height 0.35s;
+}
+.server-bar-btn:hover .server-bar-img {
+  width: 90px;
+  height: 90px;
+}
+.server-bar-glow {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(90deg, transparent 0%, #fff 20%, #fff 80%, transparent 100%);
+  opacity: 0.7;
+  filter: blur(8px);
+  transition: opacity 0.3s;
+}
+.server-bar-btn:hover .server-bar-glow {
+  opacity: 1;
+  background: linear-gradient(135deg, #fff 0%, transparent 40%, transparent 60%, #fff 100%);
+  animation: bar-glow-spin 1.2s linear infinite;
+}
+@keyframes bar-glow-spin {
+  0% { filter: blur(8px) brightness(1.2); }
+  100% { filter: blur(8px) brightness(1.2); }
+}
+.server-bar-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  color: #fff;
+  z-index: 2;
+  text-align: left;
+}
+.server-bar-btn:hover .server-bar-info {
+  opacity: 1;
+  pointer-events: all;
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(120deg, #232323cc 60%, #23232399 100%);
+  border-radius: 1.2rem;
+}
+.server-bar-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+  text-shadow: 0 2px 8px #000a;
+}
+.server-bar-desc {
+  font-size: 0.98rem;
+  color: #e0e0e0;
+  text-shadow: 0 1px 4px #0008;
+}
 </style>
 </head>
 <body>
@@ -128,11 +231,30 @@ body:not(.splashing) > #mainContent {
   </button>
   <button class="server-btn" onclick="window.open('https://discord.gg/example2','_blank')">
     <span class="server-glow"></span>
-    <img src="/assets/dc-servers/RCG.png" alt="Server 2" class="server-img" />
-    <span class="server-label">Spider's Web</span>
+    <img src="/assets/dc-servers/RGC.png" alt="Server 2" class="server-img" />
+    <span class="server-label">Rezzu's Gamblers Collective</span>
   </button>
 </div>
 
+</div>
+
+<div class="server-bar">
+  <button class="server-bar-btn" onclick="window.open('https://discord.gg/example1','_blank')">
+    <span class="server-bar-glow"></span>
+    <img src="/assets/pfp.png" alt="Server 1" class="server-bar-img" />
+    <span class="server-bar-info">
+      <span class="server-bar-title">Hexxed's Hangout</span>
+      <span class="server-bar-desc">Main community, chill & dev talk</span>
+    </span>
+  </button>
+  <button class="server-bar-btn" onclick="window.open('https://discord.gg/example2','_blank')">
+    <span class="server-bar-glow"></span>
+    <img src="/assets/pfp.png" alt="Server 2" class="server-bar-img" />
+    <span class="server-bar-info">
+      <span class="server-bar-title">Spider's Web</span>
+      <span class="server-bar-desc">Alt server, memes & random</span>
+    </span>
+  </button>
 </div>
 
 <script>
