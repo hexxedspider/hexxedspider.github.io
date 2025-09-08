@@ -813,8 +813,14 @@ function closeNames() {
   animationTimeouts = [];
 }
 
+
 document.addEventListener('keydown', e => {
-  if (e.key.toLowerCase() === 'n') {
+  // Allow secrets from both document and #secretInput
+  const isSecretInput = e.target && e.target.id === 'secretInput';
+  if (
+    (e.key.toLowerCase() === 'n') &&
+    (isSecretInput || (e.target === document.body || e.target === document))
+  ) {
     if (overlay.classList.contains('active')) {
       closeNames(); 
     } else {
@@ -829,15 +835,19 @@ document.addEventListener('keydown', e => {
 let konami = [38,38,40,40,37,39,37,39,66,65]; // key codes
 let konamiIndex = 0;
 
+
 document.addEventListener('keydown', (e) => {
-  if (e.keyCode === konami[konamiIndex]) {
-    konamiIndex++;
-    if (konamiIndex === konami.length) {
-      konamiIndex = 0;
-      activateSecret();
+  const isSecretInput = e.target && e.target.id === 'secretInput';
+  if (isSecretInput || (e.target === document.body || e.target === document)) {
+    if (e.keyCode === konami[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konami.length) {
+        konamiIndex = 0;
+        activateSecret();
+      }
+    } else {
+      konamiIndex = 0; // reset if wrong key
     }
-  } else {
-    konamiIndex = 0; // reset if wrong key
   }
 });
 
@@ -879,15 +889,19 @@ function activateSecret() {
 let spiderSecret = [72,69,88,88,69,68]; // H E X X E D
 let spiderIndex = 0;
 
+
 document.addEventListener("keydown", (e) => {
-  if (e.keyCode === spiderSecret[spiderIndex]) {
-    spiderIndex++;
-    if (spiderIndex === spiderSecret.length) {
+  const isSecretInput = e.target && e.target.id === 'secretInput';
+  if (isSecretInput || (e.target === document.body || e.target === document)) {
+    if (e.keyCode === spiderSecret[spiderIndex]) {
+      spiderIndex++;
+      if (spiderIndex === spiderSecret.length) {
+        spiderIndex = 0;
+        activateSpiderSecret();
+      }
+    } else {
       spiderIndex = 0;
-      activateSpiderSecret();
     }
-  } else {
-    spiderIndex = 0;
   }
 });
 
@@ -975,15 +989,19 @@ document.head.appendChild(style);
 let unlockSeq = "unlocked";
 let unlockIndex = 0;
 
+
 document.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === unlockSeq[unlockIndex]) {
-    unlockIndex++;
-    if (unlockIndex === unlockSeq.length) {
+  const isSecretInput = e.target && e.target.id === 'secretInput';
+  if (isSecretInput || (e.target === document.body || e.target === document)) {
+    if (e.key.toLowerCase() === unlockSeq[unlockIndex]) {
+      unlockIndex++;
+      if (unlockIndex === unlockSeq.length) {
+        unlockIndex = 0;
+        activateFluidSecret();
+      }
+    } else {
       unlockIndex = 0;
-      activateFluidSecret();
     }
-  } else {
-    unlockIndex = 0;
   }
 });
 
