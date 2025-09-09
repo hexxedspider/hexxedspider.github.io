@@ -162,9 +162,24 @@ section h1 {
   }
 
   #blurred-secrets{
-    position:fixed;bottom:60px;left:0;width:100vw;text-align:center;z-index:100;
-    display: none;
+    position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 1s ease;
+  }
+  #blurred-secrets.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .blurred-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
   }
   #secret-list {
     opacity: 0;
@@ -186,6 +201,8 @@ section h1 {
     cursor: pointer;
     transition: transform 0.2s, background 0.3s, color 0.3s;
     outline: none;
+    display: block;
+    margin: 0 auto;
   }
   #reveal-btn:hover {
     background: linear-gradient(90deg,#e0e0e0 0%,#fff 100%);
@@ -650,9 +667,8 @@ section h1 {
       <img class="spider-pfp" src="assets/pfp.png" alt="pfp" />
     </div>
     <h1 class="spider-title-center">Spider</h1>
-    <p>this is more personal "about" page, but you could also call it random.</p>
-    <p></p>
-    <p>this is like telling the class something about myself, but i cant think of something.</p>
+    <p>this is more personal "about" page, but you could also call it random.</p><br>
+    <p>i started over Discord, as i wanted discord bots with shit that i wanted specifically, but i didnt want to pay premium for. plus i was also just bored.<br><br>i first followed a tutorial by <a href="https://www.youtube.com/@UnderCtrl/videos">Under CRTL</a>, but quickly wanted to switch to Python (mainly just cause i kept getting lost and knew a little bit more about Py than JS)<br><br>then it just sorta spiraled from there and now im staying up late writing this<br><a class="voidstar" href="">im not kidding, its 4:44 am rn</a></p>
   </section>
 </main>
 
@@ -710,9 +726,6 @@ section h1 {
   <div class="blurred-content">
     <p>Warning: Certain things are meant to be more hidden for fun, but this will reveal them.</p>
     <button id="reveal-btn">Reveal Them</button>
-  </div>
-  <div class="secret-list" id="secret-list">
-    <p><strong>Revealed</strong> - Enjoy.</p>
   </div>
 </div>
 
@@ -785,16 +798,26 @@ function dissolveTransition(nextSection){
 
     if(nextSection.id === 'secrets' && !secretsRevealed) {
       document.body.classList.add('secrets-active');
-      document.getElementById('blurred-secrets').style.display = 'block';
+      const blurredSecrets = document.getElementById('blurred-secrets');
+      blurredSecrets.classList.add('active');
+      document.querySelector('.blurred-content').innerHTML = '<p>Warning: Certain things are meant to be more hidden for fun, but this will reveal them.</p><button id="reveal-btn">Reveal Them</button>';
+      document.getElementById('reveal-btn').addEventListener('click', () => {
+        secretsRevealed = true;
+        setTimeout(() => {
+          document.querySelector('.blur-overlay').style.opacity = 0;
+          const blurredSecrets = document.getElementById('blurred-secrets');
+          blurredSecrets.style.opacity = 0;
+          setTimeout(() => {
+            blurredSecrets.classList.remove('active');
+            blurredSecrets.style.opacity = 0;
+          }, 500);
+        }, 750);
+      });
     } else {
       document.body.classList.remove('secrets-active');
       const blurredSecrets = document.getElementById('blurred-secrets');
-      blurredSecrets.style.display = 'none';
-      if(!secretsRevealed) {
-        blurredSecrets.style.opacity = 1;
-        document.querySelector('.blurred-content').innerHTML = '<p>Warning: Certain things are meant to be more hidden for fun, but this will reveal them.</p><button id="reveal-btn">Reveal Them</button>';
-        document.getElementById('secret-list').classList.remove('revealed');
-      }
+      blurredSecrets.classList.remove('active');
+      blurredSecrets.style.opacity = 0;
     }
 
     let start = null;
@@ -1205,23 +1228,6 @@ window.addEventListener("load", () => {
 });
 
 let secretsRevealed = false;
-document.getElementById('reveal-btn').addEventListener('click', () => {
-  secretsRevealed = true;
-  document.querySelector('.blur-overlay').style.opacity = 0;
-  const blurred = document.querySelector('.blurred-content');
-  blurred.innerHTML = '<p>Revealing all secrets...</p>';
-  setTimeout(() => {
-    document.getElementById('secret-list').classList.add('revealed');
-  }, 1000);
-  setTimeout(() => {
-    const blurredSecrets = document.getElementById('blurred-secrets');
-    blurredSecrets.style.opacity = 0;
-    setTimeout(() => {
-      blurredSecrets.style.display = 'none';
-      blurredSecrets.style.opacity = 1;
-    }, 1000);
-  }, 3000);
-});
 
 </script>
 </body>
