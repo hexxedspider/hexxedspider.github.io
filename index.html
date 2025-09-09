@@ -19,6 +19,11 @@
     overflow:hidden;
   }
 
+  footer{
+    position:fixed;bottom:0;left:0;width:100vw;text-align:center;
+    color:#ccc;font-size:0.8rem;z-index:10;
+  }
+
   nav{
     position:fixed;top:0;left:0;width:100vw;height:60px;
     display:flex;justify-content:center;align-items:center;gap:2rem;
@@ -138,9 +143,57 @@ section h1 {
   }
 
   .voidstar:hover{transform:scale(1.05);box-shadow:0 0 8px rgba(200,200,200,0.3);}
-  footer{
-    position:absolute;bottom:0;width:100%;text-align:center;padding:1rem;font-size:0.9rem;color:#888;
+
+  .blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
   }
+  body.secrets-active .blur-overlay {
+    opacity: 1;
+  }
+
+  #blurred-secrets{
+    position:fixed;bottom:60px;left:0;width:100vw;text-align:center;z-index:100;
+    display: none;
+    transition: opacity 1s ease;
+  }
+  #secret-list {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  #secret-list.revealed {
+    opacity: 1;
+  }
+  #reveal-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 1rem;
+    background: linear-gradient(90deg,#fff 0%,#e0e0e0 100%);
+    color: #181818;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    box-shadow: 0 0 18px #fff2, 0 0 30px #8882;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, color 0.3s;
+    outline: none;
+  }
+  #reveal-btn:hover {
+    background: linear-gradient(90deg,#e0e0e0 0%,#fff 100%);
+    color: #000;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 0 30px #fff6, 0 0 60px #8883;
+  }
+
   @media (max-width:768px){
     nav{gap:1rem;padding:1rem;}
     section h1{font-size:2.2rem;}
@@ -524,7 +577,6 @@ section h1 {
 </head>
 <body>
 
-<!-- Mobile keyboard button for secrets -->
 <img id="showKeyboardBtn" src="/assets/mobileKeyboard.png" alt="Show Keyboard" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;z-index:12000;opacity:0.7;cursor:pointer;transition:opacity 0.2s;" />
 <input id="secretInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" style="position:fixed;bottom:5.5rem;right:1.5rem;width:1px;height:1px;opacity:0;z-index:12001;pointer-events:none;" />
 
@@ -535,12 +587,15 @@ section h1 {
   </video>
 </div>
 
-<nav>
+  <nav>
   <a href="#" data-target="about">About</a>
   <a href="#" data-target="projects">Projects</a>
   <a href="#" data-target="contact">Contact</a>
+  <a href="#" data-target="secrets">Secrets</a>
   <a href="#" data-target="spider">Spider</a>
 </nav>
+
+<div class="blur-overlay"></div>
 
 <main>
   <section id="about" class="active">
@@ -577,6 +632,18 @@ section h1 {
     <p>Discord Bot Test Server: <a href="https://discord.gg/vUtUENQqTD">kirabiter [ALPHA]</a></p>
     <p></p>
     <p>(more will be added once i think of accounts i can be reached on)</p>
+  </section>
+  <section id="secrets">
+    <h1>Secret Key Combos</h1>
+    <p>Here are some hidden secrets you can unlock by typing specific keys or sequences:</p>
+    <p></p>
+    <p><strong>Press 'N'</strong> - Opens a list of all my names.</p>
+    <p><strong>Konami Code</strong> (↑ ↑ ↓ ↓ ← → ← → B A) - Reveals a secret message.</p>
+    <p><strong>Type "hexxed"</strong> - Activates the spider secret overlay.</p>
+    <p><strong>Type "unlocked"</strong> - Unlocks a special fluid animation with a download link.</p>
+    <p><strong>Type "misc"</strong> - Opens the miscellaneous modal with links.</p>
+    <p></p>
+    <p>On mobile, tap the keyboard icon at the bottom right to input secrets.</p>
   </section>
   <section id="spider">
     <div class="pfp-animation">
@@ -630,21 +697,28 @@ section h1 {
   </div>
 </div>
 
-<!-- MISC MODAL OVERLAY -->
 <div id="miscModal" class="misc-modal-overlay">
   <div class="misc-modal-content">
     <button class="misc-close-btn" title="Close">&times;</button>
     <h2 class="misc-modal-title">Miscellaneous</h2>
     <div class="misc-btn-list">
-      <!-- Buttons will be injected by JS -->
     </div>
+  </div>
+</div>
+
+<div id="blurred-secrets">
+  <div class="blurred-content">
+    <p>Warning: Certain things are meant to be more hidden for fun, but this will reveal them.</p>
+    <button id="reveal-btn">Reveal Them</button>
+  </div>
+  <div class="secret-list" id="secret-list">
+    <p><strong>Revealed</strong> - Enjoy.</p>
   </div>
 </div>
 
 <footer>© 2025 hexxedspider — All rights reserved.</footer>
 
 <script>
-// --- Show keyboard for secrets on touch devices ---
 (function() {
   const isTouch = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
   const showBtn = document.getElementById('showKeyboardBtn');
@@ -657,18 +731,14 @@ section h1 {
       secretInput.focus();
       showBtn.style.opacity = 1;
     });
-    // Hide input when not focused
     secretInput.addEventListener('blur', () => {
       secretInput.style.opacity = 0;
       secretInput.style.pointerEvents = 'none';
     });
-    // Optional: fade button on hover/tap
     showBtn.addEventListener('touchstart', () => showBtn.style.opacity = 1);
     showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
   }
-  // Forward key events from input to document for secret detection
   secretInput.addEventListener('keydown', e => {
-    // Re-dispatch as if from document
     const evt = new KeyboardEvent('keydown', e);
     document.dispatchEvent(evt);
   });
@@ -712,6 +782,20 @@ function dissolveTransition(nextSection){
 
     nextSection.classList.add('active');
     nextSection.style.opacity = 1;
+
+    if(nextSection.id === 'secrets' && !secretsRevealed) {
+      document.body.classList.add('secrets-active');
+      document.getElementById('blurred-secrets').style.display = 'block';
+    } else {
+      document.body.classList.remove('secrets-active');
+      const blurredSecrets = document.getElementById('blurred-secrets');
+      blurredSecrets.style.display = 'none';
+      if(!secretsRevealed) {
+        blurredSecrets.style.opacity = 1;
+        document.querySelector('.blurred-content').innerHTML = '<p>Warning: Certain things are meant to be more hidden for fun, but this will reveal them.</p><button id="reveal-btn">Reveal Them</button>';
+        document.getElementById('secret-list').classList.remove('revealed');
+      }
+    }
 
     let start = null;
     function step(timestamp){
@@ -777,23 +861,19 @@ const items = list.querySelectorAll('p');
 let animationTimeouts = [];
 
 function openNames() {
-
   overlay.classList.add('active');
   title.classList.remove('expand','shrink');
   list.style.opacity = 0;
   items.forEach(i=>i.classList.remove('show'));
   animationTimeouts.forEach(t => clearTimeout(t));
   animationTimeouts = [];
-
   animationTimeouts.push(setTimeout(()=> {
     title.classList.add('expand');
   }, 1000));
-
   animationTimeouts.push(setTimeout(()=> {
     title.classList.remove('expand');
     title.classList.add('shrink');
   }, 4000));
-
   animationTimeouts.push(setTimeout(()=> {
     list.style.opacity = 1;
     items.forEach((item, i) => {
@@ -815,14 +895,13 @@ function closeNames() {
 
 
 document.addEventListener('keydown', e => {
-  // Allow secrets from both document and #secretInput
   const isSecretInput = e.target && e.target.id === 'secretInput';
   if (
     (e.key.toLowerCase() === 'n') &&
     (isSecretInput || (e.target === document.body || e.target === document))
   ) {
     if (overlay.classList.contains('active')) {
-      closeNames(); 
+      closeNames();
     } else {
       openNames();
     }
@@ -832,21 +911,20 @@ document.addEventListener('keydown', e => {
   }
 });
 
-let konami = [38,38,40,40,37,39,37,39,66,65]; // key codes
+let konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
 let konamiIndex = 0;
-
 
 document.addEventListener('keydown', (e) => {
   const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (isSecretInput || (e.target === document.body || e.target === document)) {
-    if (e.keyCode === konami[konamiIndex]) {
+  if (isSecretInput || e.target === document.body || e.target.tagName === 'BODY' || e.target.tagName === 'HTML') {
+    if (e.key === konami[konamiIndex]) {
       konamiIndex++;
       if (konamiIndex === konami.length) {
         konamiIndex = 0;
         activateSecret();
       }
     } else {
-      konamiIndex = 0; // reset if wrong key
+      konamiIndex = 0;
     }
   }
 });
@@ -867,13 +945,12 @@ function activateSecret() {
   const overlay = secret.querySelector(".secret-overlay");
   const btn = overlay.querySelector(".secret-leave");
 
-  // trigger fade-in
   requestAnimationFrame(() => {
     overlay.classList.add("show");
   });
 
   function closeSecret() {
-    overlay.classList.remove("show"); // fade out
+    overlay.classList.remove("show");
     setTimeout(() => secret.remove(), 500);
     document.removeEventListener("keydown", escHandler);
   }
@@ -886,14 +963,14 @@ function activateSecret() {
   document.addEventListener("keydown", escHandler);
 }
 
-let spiderSecret = [72,69,88,88,69,68]; // H E X X E D
+let spiderSecret = ['h','e','x','x','e','d'];
 let spiderIndex = 0;
 
 
 document.addEventListener("keydown", (e) => {
   const isSecretInput = e.target && e.target.id === 'secretInput';
   if (isSecretInput || (e.target === document.body || e.target === document)) {
-    if (e.keyCode === spiderSecret[spiderIndex]) {
+    if (e.key.toLowerCase() === spiderSecret[spiderIndex]) {
       spiderIndex++;
       if (spiderIndex === spiderSecret.length) {
         spiderIndex = 0;
@@ -1018,7 +1095,6 @@ function activateFluidSecret() {
   `;
   document.body.appendChild(fluid);
 
-  // Close with ESC
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       fluid.remove();
@@ -1026,22 +1102,18 @@ function activateFluidSecret() {
   });
 }
 
-// --- MISC MODAL LOGIC ---
 (() => {
-  // List of buttons: { text, url }
   const miscOptions = [
     { text: 'Discord', url: 'extra/Discord/dc.html' },
     { text: 'YouTube', url: 'extra/YouTube/yt.html' },
     { text: 'GitHub', url: 'https://github.com/hexxedspider' },
-    { text: 'Reddit', url: 'https://reddit.com/user/suicidespiders' },
-    // Add more as needed
+    { text: 'Reddit', url: 'https://reddit.com/user/suicidespiders' }
   ];
 
   const modal = document.getElementById('miscModal');
   const btnList = modal.querySelector('.misc-btn-list');
   const closeBtn = modal.querySelector('.misc-close-btn');
 
-  // Populate buttons
   btnList.innerHTML = '';
   miscOptions.forEach(opt => {
     const btn = document.createElement('button');
@@ -1057,7 +1129,6 @@ function activateFluidSecret() {
   function openModal() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Focus first button for accessibility
     setTimeout(() => {
       const firstBtn = btnList.querySelector('.misc-btn');
       if (firstBtn) firstBtn.focus();
@@ -1066,7 +1137,6 @@ function activateFluidSecret() {
   function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
-    // Clear buffer
     miscBuffer = '';
   }
   closeBtn.addEventListener('click', closeModal);
@@ -1079,7 +1149,6 @@ function activateFluidSecret() {
     }
   });
 
-  // --- Detect typing "misc" anywhere ---
   let miscBuffer = '';
   document.addEventListener('keydown', e => {
     if (modal.classList.contains('active')) return;
@@ -1088,7 +1157,6 @@ function activateFluidSecret() {
       miscBuffer += e.key.toLowerCase();
       if (miscBuffer.length > 8) miscBuffer = miscBuffer.slice(-8);
       if (miscBuffer.endsWith('misc')) {
-        // Fade out current content, then show modal
         fadeAndShowModal();
         miscBuffer = '';
       }
@@ -1096,7 +1164,6 @@ function activateFluidSecret() {
   });
 
   function fadeAndShowModal() {
-    // Fade out main content (sections)
     const main = document.querySelector('main');
     main.style.transition = 'opacity 0.5s cubic-bezier(.4,0,.2,1)';
     main.style.opacity = '0';
@@ -1113,31 +1180,47 @@ window.addEventListener("load", () => {
 
   function removeSplash() {
     splash.style.opacity = 0;
-    setTimeout(() => splash.remove(), 1000); // wait for fade
+    setTimeout(() => splash.remove(), 1000);
   }
 
   if (video) {
     video.addEventListener("ended", removeSplash);
-    // fallback: if you want a preset 6 seconds
     setTimeout(removeSplash, 6000);
   } else {
-    // if video fails, remove after 6s
     setTimeout(removeSplash, 6000);
   }
-    // --- Splash skip logic ---
-    let canSkipSplash = false;
-    setTimeout(() => { canSkipSplash = true; }, 90);
-    function trySkipSplash() {
-      if (canSkipSplash && splash && splash.parentNode) {
-        removeSplash();
-        window.removeEventListener('keydown', trySkipSplash);
-        window.removeEventListener('mousedown', trySkipSplash);
-        window.removeEventListener('touchstart', trySkipSplash);
-      }
+  let canSkipSplash = false;
+  setTimeout(() => { canSkipSplash = true; }, 90);
+  function trySkipSplash() {
+    if (canSkipSplash && splash && splash.parentNode) {
+      removeSplash();
+      window.removeEventListener('keydown', trySkipSplash);
+      window.removeEventListener('mousedown', trySkipSplash);
+      window.removeEventListener('touchstart', trySkipSplash);
     }
-    window.addEventListener('keydown', trySkipSplash);
-    window.addEventListener('mousedown', trySkipSplash);
-    window.addEventListener('touchstart', trySkipSplash);
+  }
+  window.addEventListener('keydown', trySkipSplash);
+  window.addEventListener('mousedown', trySkipSplash);
+  window.addEventListener('touchstart', trySkipSplash);
+});
+
+let secretsRevealed = false;
+document.getElementById('reveal-btn').addEventListener('click', () => {
+  secretsRevealed = true;
+  document.querySelector('.blur-overlay').style.opacity = 0;
+  const blurred = document.querySelector('.blurred-content');
+  blurred.innerHTML = '<p>Revealing all secrets...</p>';
+  setTimeout(() => {
+    document.getElementById('secret-list').classList.add('revealed');
+  }, 1000);
+  setTimeout(() => {
+    const blurredSecrets = document.getElementById('blurred-secrets');
+    blurredSecrets.style.opacity = 0;
+    setTimeout(() => {
+      blurredSecrets.style.display = 'none';
+      blurredSecrets.style.opacity = 1;
+    }, 1000);
+  }, 3000);
 });
 
 </script>
