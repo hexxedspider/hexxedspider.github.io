@@ -752,7 +752,16 @@ section h1 {
     showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
   }
   secretInput.addEventListener('keydown', e => {
-    const evt = new KeyboardEvent('keydown', e);
+    const evt = new KeyboardEvent('keydown', {
+      key: e.key,
+      code: e.code,
+      ctrlKey: e.ctrlKey,
+      shiftKey: e.shiftKey,
+      altKey: e.altKey,
+      metaKey: e.metaKey,
+      repeat: e.repeat,
+      isComposing: e.isComposing
+    });
     document.dispatchEvent(evt);
   });
 })();
@@ -918,11 +927,7 @@ function closeNames() {
 
 
 document.addEventListener('keydown', e => {
-  const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (
-    (e.key.toLowerCase() === 'n') &&
-    (isSecretInput || (e.target === document.body || e.target === document))
-  ) {
+  if (e.key.toLowerCase() === 'n') {
     if (overlay.classList.contains('active')) {
       closeNames();
     } else {
@@ -939,7 +944,7 @@ let konamiIndex = 0;
 
 document.addEventListener('keydown', (e) => {
   const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (isSecretInput || e.target === document.body || e.target.tagName === 'BODY' || e.target.tagName === 'HTML') {
+  if (true) {
     if (e.key === konami[konamiIndex]) {
       konamiIndex++;
       if (konamiIndex === konami.length) {
@@ -959,7 +964,7 @@ function activateSecret() {
       <p class="secret-main">you found it.</p>
       <p class="secret-sub">not many people make it here...</p>
       <p class="secret-sub">you were either told it, or really bored.</p>
-      <p class="secret-sub">i wonder if hexxedspider knows?</p>
+      <p class="secret-sub">i wonder if HEXXED knows?</p>
       <button class="secret-leave">Leave</button>
     </div>`;
 
@@ -992,7 +997,7 @@ let spiderIndex = 0;
 
 document.addEventListener("keydown", (e) => {
   const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (isSecretInput || (e.target === document.body || e.target === document)) {
+  if (true) {
     if (e.key.toLowerCase() === spiderSecret[spiderIndex]) {
       spiderIndex++;
       if (spiderIndex === spiderSecret.length) {
@@ -1092,7 +1097,7 @@ let unlockIndex = 0;
 
 document.addEventListener("keydown", (e) => {
   const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (isSecretInput || (e.target === document.body || e.target === document)) {
+  if (true) {
     if (e.key.toLowerCase() === unlockSeq[unlockIndex]) {
       unlockIndex++;
       if (unlockIndex === unlockSeq.length) {
