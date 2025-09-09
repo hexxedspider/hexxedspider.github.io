@@ -752,6 +752,7 @@ section h1 {
     showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
   }
   secretInput.addEventListener('keydown', e => {
+    e.preventDefault();
     const evt = new KeyboardEvent('keydown', {
       key: e.key,
       code: e.code,
