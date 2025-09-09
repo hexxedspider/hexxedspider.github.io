@@ -594,8 +594,7 @@ section h1 {
 </head>
 <body>
 
-<img id="showKeyboardBtn" src="/assets/mobileKeyboard.png" alt="Show Keyboard" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;z-index:12000;opacity:0.7;cursor:pointer;transition:opacity 0.2s;" />
-<input id="secretInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" style="position:fixed;bottom:5.5rem;right:1.5rem;width:1px;height:1px;opacity:0;z-index:12001;pointer-events:none;" />
+
 
 <div id="splashOverlay">
   <video id="splashVideo" autoplay muted>
@@ -660,7 +659,7 @@ section h1 {
     <p><strong>Type "unlocked"</strong> - Unlocks a special fluid animation with a download link.</p>
     <p><strong>Type "misc"</strong> - Opens the miscellaneous modal with links.</p>
     <p></p>
-    <p>On mobile, tap the keyboard icon at the bottom right to input secrets.</p>
+    <p>On mobile, you'll be redirected to a mobile-optimized version.</p>
   </section>
   <section id="spider">
     <div class="pfp-animation">
@@ -734,44 +733,11 @@ section h1 {
 <script>
 // Mobile detection and redirect
 if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-  window.location.href = 'extra/MobilePort/mobile.html';
+  window.location.href = '/extra/MobilePort/mobile.html';
 }
 </script>
 <script>
-(function() {
-  const isTouch = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
-  const showBtn = document.getElementById('showKeyboardBtn');
-  const secretInput = document.getElementById('secretInput');
-  if (isTouch) {
-    showBtn.style.display = 'block';
-    showBtn.addEventListener('click', () => {
-      secretInput.style.opacity = 1;
-      secretInput.style.pointerEvents = 'auto';
-      secretInput.focus();
-      showBtn.style.opacity = 1;
-    });
-    secretInput.addEventListener('blur', () => {
-      secretInput.style.opacity = 0;
-      secretInput.style.pointerEvents = 'none';
-    });
-    showBtn.addEventListener('touchstart', () => showBtn.style.opacity = 1);
-    showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
-  }
-  secretInput.addEventListener('keydown', e => {
-    e.preventDefault();
-    const evt = new KeyboardEvent('keydown', {
-      key: e.key,
-      code: e.code,
-      ctrlKey: e.ctrlKey,
-      shiftKey: e.shiftKey,
-      altKey: e.altKey,
-      metaKey: e.metaKey,
-      repeat: e.repeat,
-      isComposing: e.isComposing
-    });
-    document.dispatchEvent(evt);
-  });
-})();
+</script>
 const links = document.querySelectorAll('nav a');
 const sections = document.querySelectorAll('section');
 const canvas = document.querySelector('.dissolve-overlay');
