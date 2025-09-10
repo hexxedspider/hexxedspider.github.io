@@ -221,7 +221,14 @@ section h1 {
     section h1{font-size:3.5rem;}
     section p{font-size:1.2rem;}
     nav a{font-size:1.3rem;}
-    #showKeyboardBtn{width:60px;height:60px;}
+  }
+
+  @media (max-width: 768px){
+    section{max-width: 95vw; padding: 1rem;}
+    section h1{font-size: 2rem; margin-bottom: 1rem;}
+    section p{font-size: 0.9rem; line-height: 1.4;}
+    nav a{font-size: 0.9rem;}
+    .secret-button{min-width: 180px; padding: 0.8rem 1.5rem; font-size: 0.9rem;}
   }
 
   .dissolve-overlay{
@@ -597,12 +604,37 @@ section h1 {
   .misc-modal-title { font-size: 1.3rem; }
   .misc-btn { font-size: 0.95rem; padding: 0.8rem 1.2rem; }
 }
+
+/* Secret buttons */
+.secret-button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, #fff 0%, #e0e0e0 100%);
+  color: #181818;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 0 18px rgba(255,255,255,0.2), 0 0 30px rgba(136,136,136,0.2);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s, color 0.3s, box-shadow 0.3s;
+  outline: none;
+  min-width: 200px;
+}
+.secret-button:hover {
+  background: linear-gradient(90deg, #e0e0e0 0%, #fff 100%);
+  color: #000;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 30px rgba(255,255,255,0.6), 0 0 60px rgba(136,136,136,0.3);
+}
+.secret-button:active {
+  transform: scale(0.98) translateY(0);
+}
 </style>
 </head>
 <body>
 
-<img id="showKeyboardBtn" src="/assets/mobileKeyboard.png" alt="Show Keyboard" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;z-index:12000;opacity:0.7;cursor:pointer;transition:opacity 0.2s;" />
-<input id="secretInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" style="position:fixed;bottom:5.5rem;right:1.5rem;width:1px;height:1px;opacity:0;z-index:12001;pointer-events:none;" />
+
 
 <div id="splashOverlay">
   <video id="splashVideo" autoplay muted>
@@ -632,7 +664,7 @@ section h1 {
     <p></p>
     <p>this about page is more of a general thing, with "spider" being the more personal stuff - added soon.</p>
     <p></p>
-    <p>if you want to see the complete list of names, press "N" for a list - will be adding a keyboard button for mobile users.</p>
+    <p>if you want to see the complete list of names, click the "Show All Names" button in the Secrets section.</p>
   </section>
   <section id="projects">
     <h1>Projects</h1>
@@ -658,16 +690,15 @@ section h1 {
     <p>(more will be added once i think of accounts i can be reached on)</p>
   </section>
   <section id="secrets">
-    <h1>Secret Key Combos</h1>
-    <p>Here are some hidden secrets you can unlock by typing specific keys or sequences:</p>
-    <p></p>
-    <p><strong>Press 'N'</strong> - Opens a list of all my names.</p>
-    <p><strong>Konami Code</strong> (↑ ↑ ↓ ↓ ← → ← → B A) - Reveals a secret message.</p>
-    <p><strong>Type "hexxed"</strong> - Activates the spider secret overlay.</p>
-    <p><strong>Type "unlocked"</strong> - Unlocks a special fluid animation with a download link.</p>
-    <p><strong>Type "misc"</strong> - Opens the miscellaneous modal with links.</p>
-    <p></p>
-    <p>On mobile, tap the keyboard icon at the bottom right to input secrets.</p>
+    <h1>Hidden Secrets</h1>
+    <p>Click the buttons below to reveal hidden secrets:</p>
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; align-items: center;">
+      <button class="secret-button" data-secret="names">Show All Names</button>
+      <button class="secret-button" data-secret="konami">Konami Code Secret</button>
+      <button class="secret-button" data-secret="spider">Spider Secret</button>
+      <button class="secret-button" data-secret="fluid">Fluid Download</button>
+      <button class="secret-button" data-secret="misc">Miscellaneous Links</button>
+    </div>
   </section>
   <section id="spider">
     <div class="pfp-animation">
@@ -739,38 +770,30 @@ section h1 {
 <footer>© 2025 hexxedspider — All rights reserved.</footer>
 
 <script>
-(function() {
-  const isTouch = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
-  const showBtn = document.getElementById('showKeyboardBtn');
-  const secretInput = document.getElementById('secretInput');
-  if (isTouch) {
-    showBtn.style.display = 'block';
-    showBtn.addEventListener('click', () => {
-      secretInput.style.opacity = 1;
-      secretInput.style.pointerEvents = 'auto';
-      secretInput.focus();
-      showBtn.style.opacity = 1;
+(() => {
+  // Secret button handlers
+  const secretButtons = document.querySelectorAll('.secret-button');
+  secretButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const secretType = button.dataset.secret;
+      switch(secretType) {
+        case 'names':
+          openNames();
+          break;
+        case 'konami':
+          activateSecret();
+          break;
+        case 'spider':
+          activateSpiderSecret();
+          break;
+        case 'fluid':
+          activateFluidSecret();
+          break;
+        case 'misc':
+          fadeAndShowModal();
+          break;
+      }
     });
-    secretInput.addEventListener('blur', () => {
-      secretInput.style.opacity = 0;
-      secretInput.style.pointerEvents = 'none';
-    });
-    showBtn.addEventListener('touchstart', () => showBtn.style.opacity = 1);
-    showBtn.addEventListener('touchend', () => showBtn.style.opacity = 0.7);
-  }
-  secretInput.addEventListener('keydown', e => {
-    e.preventDefault();
-    const evt = new KeyboardEvent('keydown', {
-      key: e.key,
-      code: e.code,
-      ctrlKey: e.ctrlKey,
-      shiftKey: e.shiftKey,
-      altKey: e.altKey,
-      metaKey: e.metaKey,
-      repeat: e.repeat,
-      isComposing: e.isComposing
-    });
-    document.dispatchEvent(evt);
   });
 })();
 const links = document.querySelectorAll('nav a');
@@ -934,37 +957,6 @@ function closeNames() {
 }
 
 
-document.addEventListener('keydown', e => {
-  if (e.key.toLowerCase() === 'n') {
-    if (overlay.classList.contains('active')) {
-      closeNames();
-    } else {
-      openNames();
-    }
-  }
-  if (e.key === 'Escape') {
-    closeNames();
-  }
-});
-
-let konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-let konamiIndex = 0;
-
-document.addEventListener('keydown', (e) => {
-  const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (true) {
-    if (e.key === konami[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konami.length) {
-        konamiIndex = 0;
-        activateSecret();
-      }
-    } else {
-      konamiIndex = 0;
-    }
-  }
-});
-
 function activateSecret() {
   const secret = document.createElement("div");
   secret.innerHTML = `
@@ -988,35 +980,10 @@ function activateSecret() {
   function closeSecret() {
     overlay.classList.remove("show");
     setTimeout(() => secret.remove(), 500);
-    document.removeEventListener("keydown", escHandler);
-  }
-
-  function escHandler(e) {
-    if (e.key === "Escape") closeSecret();
   }
 
   btn.addEventListener("click", closeSecret);
-  document.addEventListener("keydown", escHandler);
 }
-
-let spiderSecret = ['h','e','x','x','e','d'];
-let spiderIndex = 0;
-
-
-document.addEventListener("keydown", (e) => {
-  const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (true) {
-    if (e.key.toLowerCase() === spiderSecret[spiderIndex]) {
-      spiderIndex++;
-      if (spiderIndex === spiderSecret.length) {
-        spiderIndex = 0;
-        activateSpiderSecret();
-      }
-    } else {
-      spiderIndex = 0;
-    }
-  }
-});
 
 function activateSpiderSecret() {
   const secret = document.createElement("div");
@@ -1041,9 +1008,6 @@ function activateSpiderSecret() {
   }
 
   secret.querySelector(".secret-close").addEventListener("click", closeSecret);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeSecret();
-  });
 }
 
 const style = document.createElement("style");
@@ -1099,25 +1063,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-let unlockSeq = "unlocked";
-let unlockIndex = 0;
-
-
-document.addEventListener("keydown", (e) => {
-  const isSecretInput = e.target && e.target.id === 'secretInput';
-  if (true) {
-    if (e.key.toLowerCase() === unlockSeq[unlockIndex]) {
-      unlockIndex++;
-      if (unlockIndex === unlockSeq.length) {
-        unlockIndex = 0;
-        activateFluidSecret();
-      }
-    } else {
-      unlockIndex = 0;
-    }
-  }
-});
-
 function activateFluidSecret() {
   const fluid = document.createElement("div");
   fluid.id = "secret-fluid";
@@ -1130,12 +1075,6 @@ function activateFluidSecret() {
     </button>
   `;
   document.body.appendChild(fluid);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      fluid.remove();
-    }
-  });
 }
 
 (() => {
