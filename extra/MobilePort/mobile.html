@@ -7,7 +7,7 @@
 <meta property="og:url" content="https://hexxedspider.github.io/" />
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>hexxedspider's corner</title>
+<title>hexxedspider's corner - portable edition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
 <style>
@@ -651,7 +651,7 @@ section h1 {
 
 <div id="splashOverlay">
   <video id="splashVideo" autoplay muted>
-    <source src="../assets/splashscreen.mp4" type="video/mp4">
+    <source src="../../assets/splashscreen.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
 </div>
@@ -727,6 +727,7 @@ section h1 {
 <canvas class="dissolve-overlay"></canvas>
 
 <div class="names-overlay" id="namesOverlay">
+  <button class="misc-close-btn names-close-btn" title="Close">&times;</button>
   <h1 class="names-title" id="namesTitle">List of Names</h1>
   <div class="names-list" id="namesList">
     <p>hex</p>
@@ -1058,20 +1059,26 @@ function activateFluidSecret() {
   const fluid = document.createElement("div");
   fluid.id = "secret-fluid";
   fluid.innerHTML = `
+    <button class="misc-close-btn fluid-close-btn" title="Close">&times;</button>
     <h1 style="font-family:'Cinzel Decorative',serif; font-size:2rem; margin-bottom:2rem;">
     ~cr4ck/modified/spider/hexxed/true;
     </h1>
-    <button class="secret-btn" onclick="window.open('https://archive.org/download/fl-studio-producer-edition-v-21.0.3-build-3517-re-pack/FL%20Studio%20Producer%20Edition%20v21.0.3%20Build%203517%20Re-Pack.zip')">
+    <button class="secret-btn" onclick="window.open('https://archive.org/download/fl-studio-producer-edition-v-21.0.3-build-3517-re-pack/FL%20Studio%20Producer%20Edition%20v21.0.3%20Build%203517%20Re-Pack.zip', '_blank')">
       FL Prod. Edition (v2021)
     </button>
   `;
   document.body.appendChild(fluid);
+
+  const closeBtn = fluid.querySelector('.fluid-close-btn');
+  closeBtn.addEventListener('click', () => {
+    fluid.remove();
+  });
 }
 
 (() => {
   const miscOptions = [
-    { text: 'Discord', url: 'extra/Discord/dc.html' },
-    { text: 'YouTube', url: 'extra/YouTube/yt.html' },
+    { text: 'Discord', url: '../../extra/Discord/dc.html' },
+    { text: 'YouTube', url: '../../extra/YouTube/yt.html' },
     { text: 'GitHub', url: 'https://github.com/hexxedspider' },
     { text: 'Reddit', url: 'https://reddit.com/user/suicidespiders' }
   ];
@@ -1138,6 +1145,9 @@ function activateFluidSecret() {
       main.style.opacity = '1';
     }, 500);
   }
+
+  // Expose for global access
+  window.fadeAndShowModal = fadeAndShowModal;
 })();
 
 window.addEventListener("load", () => {
@@ -1171,6 +1181,12 @@ window.addEventListener("load", () => {
 });
 
 let secretsRevealed = false;
+
+// Names close button
+const namesCloseBtn = document.querySelector('.names-close-btn');
+if (namesCloseBtn) {
+  namesCloseBtn.addEventListener('click', closeNames);
+}
 
 </script>
 </body>
