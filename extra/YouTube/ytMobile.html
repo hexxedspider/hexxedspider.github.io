@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>youtube hub - portable edition</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #0f0f0f; color: #fff; }
+  h1 { color: #ffffff; }
+  p { font-size: 16px; line-height: 1.5; }
+  #splashOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100dvh;
+  background: #0f0f0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+#splashVideo {
+  width: 100vw;
+  height: 100dvh;
+  object-fit: contain;
+  max-width: 100vw;
+  max-height: 100dvh;
+  background: #0f0f0f;
+}
+body.splashing > #mainContent {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+body:not(.splashing) > #mainContent {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.5s;
+}
+.channel-preview-list {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+.channel-btn {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 24px #0008;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+  margin-bottom: 1.2rem;
+}
+.channel-btn:hover {
+  transform: scale(1.08);
+}
+.channel-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 18px #0f0f0f, 0 0 32px #000002;
+  z-index: 1;
+}
+.channel-label {
+  display: block;
+  margin-top: 0.7rem;
+  color: #fff;
+  font-size: 1.05rem;
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-align: center;
+  text-shadow: 0 2px 8px #000a;
+  letter-spacing: 0.5px;
+}
+.channel-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 120px; height: 120px;
+  transform: translate(-50%,-50%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    #ff0000 0deg 50deg,
+    #fff 50deg 360deg
+  );
+  filter: blur(6px) brightness(1.2);
+  opacity: 0.7;
+  animation: spin-glow 2.5s linear infinite;
+}
+@keyframes spin-glow {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
+.channel-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.6rem 0 1rem 0;
+  background: linear-gradient(0deg, #232323 80%, transparent 100%);
+  z-index: 100;
+}
+.channel-bar-btn {
+  position: relative;
+  width: 130px;
+  height: 45px;
+  border: none;
+  background: #232323;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 14px #000a;
+  transition: width 0.35s cubic-bezier(.4,0,.2,1), height 0.35s cubic-bezier(.4,0,.2,1), border-radius 0.35s, box-shadow 0.3s;
+  padding: 0 0.8rem;
+  min-width: 0;
+}
+.channel-bar-btn:hover, .channel-bar-btn.expanded {
+  width: 130px;
+  height: 120px;
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 28px #fff4, 0 0 0 4px #fff2;
+  justify-content: center;
+}
+.channel-bar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 8px #fff4;
+  z-index: 1;
+  transition: width 0.35s, height 0.35s;
+}
+.channel-bar-btn:hover .channel-bar-img, .channel-bar-btn.expanded .channel-bar-img {
+  width: 50px;
+  height: 50px;
+}
+.channel-bar-glow {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(90deg, transparent 0%, #fff 20%, #fff 80%, transparent 100%);
+  opacity: 0.7;
+  filter: blur(8px);
+  transition: opacity 0.3s;
+}
+.channel-bar-btn:hover .channel-bar-glow, .channel-bar-btn.expanded .channel-bar-glow {
+  opacity: 1;
+  background: linear-gradient(135deg, #fff 0%, transparent 40%, transparent 60%, #fff 100%);
+  animation: bar-glow-spin 1.2s linear infinite;
+}
+@keyframes bar-glow-spin {
+  0% { filter: blur(8px) brightness(1.2); }
+  100% { filter: blur(8px) brightness(1.2); }
+}
+.channel-bar-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  color: #fff;
+  z-index: 2;
+  text-align: left;
+}
+.channel-bar-btn:hover .channel-bar-info, .channel-bar-btn.expanded .channel-bar-info {
+  opacity: 1;
+  pointer-events: all;
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(120deg, #232323cc 60%, #23232399 100%);
+  border-radius: 0.8rem;
+}
+.channel-bar-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 1px 6px #000a;
+}
+.channel-bar-desc {
+  font-size: 0.88rem;
+  color: #e0e0e0;
+  text-shadow: 0 1px 4px #0008;
+}
+
+.yt-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+.yt-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 18px #ff0000, 0 0 36px #232323;
+  margin-bottom: 0.8rem;
+}
+.yt-header h1 {
+  color: #fff;
+  font-size: 1.8rem;
+  font-family: 'Montserrat', Arial, sans-serif;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 8px #ff0000cc, 0 1px 6px #000a;
+}
+.yt-desc {
+  color: #e0e0e0;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.5;
+  text-shadow: 0 1px 4px #232323, 0 1px 2px #0008;
+}
+
+@media (max-width: 768px) {
+  .channel-bar {
+    gap: 0.8rem;
+    padding: 0.8rem 1rem 1.2rem 1rem;
+  }
+  .channel-bar-btn {
+    height: 50px;
+    padding: 0 0.6rem;
+  }
+  .channel-bar-btn:hover, .channel-bar-btn.expanded {
+    height: 130px;
+  }
+  .channel-bar-title {
+    font-size: 1.1rem;
+  }
+  .channel-bar-desc {
+    font-size: 0.95rem;
+  }
+  .yt-header h1 {
+    font-size: 1.6rem;
+  }
+  .yt-desc {
+    max-width: 350px;
+    font-size: 0.95rem;
+  }
+}
+@media (max-width: 480px) {
+  .channel-bar {
+    gap: 0.5rem;
+    padding: 0.6rem 0.5rem 1rem 0.5rem;
+    flex-wrap: wrap;
+  }
+  .channel-bar-btn {
+    height: 45px;
+    width: 110px;
+    padding: 0 0.5rem;
+  }
+  .channel-bar-btn:hover, .channel-bar-btn.expanded {
+    width: 110px;
+    height: 110px;
+  }
+  .channel-bar-title {
+    font-size: 1rem;
+  }
+  .channel-bar-desc {
+    font-size: 0.88rem;
+  }
+  .yt-header {
+    margin-top: 1.5rem;
+  }
+  .yt-header h1 {
+    font-size: 1.4rem;
+  }
+  .yt-desc {
+    max-width: 90vw;
+    font-size: 0.9rem;
+  }
+  #mainContent {
+    padding: 0 0.5rem;
+  }
+}
+</style>
+</head>
+<body>
+<div id="splashOverlay">
+  <video id="splashVideo" autoplay muted>
+    <source src="../../assets/yt-channel/YouTubeSplashscreen169.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+
+<div id="mainContent">
+
+  <div class="yt-header">
+    <img src="../../assets/pfp.png" alt="YouTube Logo" class="yt-logo" />
+    <h1>hexxedspider's yt hub</h1>
+    <p class="yt-desc">hey<br>
+    <br>check out my YouTube content- hover or tap over one for details.<br>
+    <br>dont expect high quality content</p>
+  </div>
+
+  <div class="channel-bar">
+    <button class="channel-bar-btn expanded" data-url="https://youtube.com/@driftyxii">
+      <span class="channel-bar-glow"></span>
+      <img src="../../assets/yt-channel/driftyxii.jpg" alt="Channel 1" class="channel-bar-img" />
+      <span class="channel-bar-info">
+        <span class="channel-bar-title">DriftyXII</span>
+        <span class="channel-bar-desc">Main music persona, many different genres.</span>
+      </span>
+    </button>
+    <button class="channel-bar-btn" data-url="https://youtube.com/@suicidespiderxii">
+      <span class="channel-bar-glow"></span>
+      <img src="../../assets/yt-channel/suicidespidersXII.jpg" alt="Channel 2" class="channel-bar-img" />
+      <span class="channel-bar-info">
+        <span class="channel-bar-title">suicidespidersXII</span>
+        <span class="channel-bar-desc">Alternative persona that can often be seen with Drift.</span>
+      </span>
+    </button>
+        <button class="channel-bar-btn" data-url="https://youtube.com/@VoidstarXII">
+      <span class="channel-bar-glow"></span>
+      <img src="../../assets/yt-channel/VoidstarXII.jpg" alt="Channel 3" class="channel-bar-img" />
+      <span class="channel-bar-info">
+        <span class="channel-bar-title">VoidstarXII</span>
+        <span class="channel-bar-desc">Gaming highlights and streams (full vods soon).</span>
+      </span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+// Hide main content initially
+(function() {
+  document.body.classList.add('splashing');
+  const splash = document.getElementById('splashOverlay');
+  const video = document.getElementById('splashVideo');
+  function removeSplash() {
+    splash.style.opacity = 0;
+    setTimeout(() => {
+      splash.remove();
+      document.body.classList.remove('splashing');
+      document.body.style.background = '#0f0f0f';
+    }, 1000);
+  }
+  if (video) {
+    video.addEventListener('ended', removeSplash);
+    setTimeout(removeSplash, 6000);
+  } else {
+    setTimeout(removeSplash, 6000);
+  }
+  let canSkipSplash = false;
+  setTimeout(() => { canSkipSplash = true; }, 100);
+  function trySkipSplash() {
+    if (canSkipSplash && splash && splash.parentNode) {
+      removeSplash();
+      window.removeEventListener('keydown', trySkipSplash);
+      window.removeEventListener('mousedown', trySkipSplash);
+      window.removeEventListener('touchstart', trySkipSplash);
+    }
+  }
+  window.addEventListener('keydown', trySkipSplash);
+  window.addEventListener('mousedown', trySkipSplash);
+  window.addEventListener('touchstart', trySkipSplash);
+})();
+
+// Handle channel button taps
+const channelBtnElements = document.querySelectorAll('.channel-bar-btn');
+channelBtnElements.forEach(btn => {
+  let expandTimeout;
+  btn.addEventListener('click', function() {
+    if (this.classList.contains('expanded')) {
+      const url = this.dataset.url;
+      window.open(url, '_blank');
+      this.classList.remove('expanded');
+      if (expandTimeout) clearTimeout(expandTimeout);
+    } else {
+      this.classList.add('expanded');
+      if (expandTimeout) clearTimeout(expandTimeout);
+      expandTimeout = setTimeout(() => {
+        this.classList.remove('expanded');
+      }, 2500);
+    }
+  });
+  btn.addEventListener('mouseleave', function() {
+    this.classList.remove('expanded');
+    if (expandTimeout) clearTimeout(expandTimeout);
+  });
+});
+</script>
+</body>
+</html>
