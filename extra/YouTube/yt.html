@@ -362,5 +362,12 @@ channelBtnElements.forEach(btn => {
   });
 });
 </script>
+
+<script>
+// Mobile detection and redirect
+if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  window.location.href = 'ytMobile.html';
+}
+</script>
 </body>
 </html>
